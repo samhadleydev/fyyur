@@ -22,9 +22,6 @@ moment = Moment(app)
 app.config.from_object('fyyur_app.config')
 db = SQLAlchemy(app)
 
-
-from fyyur_app import models, venue_routes, artist_routes, show_routes
-
 def format_datetime(value, format='medium'):
     date = dateutil.parser.parse(value)
     if format == 'full':
@@ -32,6 +29,13 @@ def format_datetime(value, format='medium'):
     elif format == 'medium':
         format = "EE MM, dd, y h:mma"
     return babel.dates.format_datetime(date, format)
+
+from fyyur_app import models, venue_routes, artist_routes, show_routes
+
+@app.route('/')
+def index():
+  return render_template('pages/home.html')
+
 
 
 app.jinja_env.filters['datetime'] = format_datetime
