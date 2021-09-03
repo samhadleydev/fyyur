@@ -107,9 +107,8 @@ def show_artist(artist_id):
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-
-  form = ArtistForm()
   artist = Artist.query.get(artist_id)
+  form = ArtistForm(obj=artist)
 
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
@@ -117,50 +116,41 @@ def edit_artist(artist_id):
 def edit_artist_submission(artist_id):
 
   form = ArtistForm(request.form)
+
   artist = Artist.query.get(artist_id)
+  artist.name = request.form['name']
+  artist.city = request.form['city']
+  artist.state = request.form['state']
+  artist.phone = request.form['phone']
+  artist.website_link = request.form['website_link']
+  artist.image_link = request.form['image_link']
+  artist.facebook_link = request.form['facebook_link']
+  artist.seeking_description = request.form['seeking_description']
+  db.session.add(artist)
 
-  name = form.name.data
-  city = form.city.data
-  state = form.state.data
-  phone = form.phone.data
-  website_link = form.website_link.data
-  facebook_link = form.facebook_link.data
-  image_link = form.image_link.data
-  seeking_venue = form.seeking_venue.data
-  seeking_description = form.seeking_description.data
+  artist.genres.clear()
   genres = form.genres.data
-
-  artist.name = name
-  artist.city = city
-  artist.state = state
-  artist.phone = phone
-  artist.seeking_venue = seeking_venue
-  artist.seeking_description = seeking_description
-  artist.image_link = image_link
-  artist.website_link = website_link
-  artist.facebook_link = facebook_link
-  artist.genres = []
-
+  
   for genre in genres:
     get_genre = Genre.query.filter_by(name=genre).one_or_none()
     if get_genre:
-        artist.genres.append(get_genre)
+                    artist.genres.append(get_genre)
 
     else:
-        new_genre = Genre(name=genre)
-        db.session.add(new_genre)
-        artist.genres.append(new_genre)
+                    new_genre = Genre(name=genre)
+                    db.session.add(new_genre)
+                    artist.genres.append(new_genre)
 
   try:
-      db.session.commit()
-      flash('Update successful. You\'re on Fyyur!')
+        db.session.commit()
+        flash('Artist was successfully listed!')
   except:
-      flash('Oops! Something went wrong: Update unsuccessful.')
+        flash('An error occurred. Artist could not be added')
   finally:
-      db.session.close()
-  return render_template('show_venue', artist_id=artist_id)
+        db.session.close()
+        return redirect(url_for('show_artist', artist_id=artist_id))
 
-  # TODO: populate form with fields from artist with ID <artist_id>
+  # DONE: populate form with fields from artist with ID <artist_id>
 
 
 #  Create Artist
