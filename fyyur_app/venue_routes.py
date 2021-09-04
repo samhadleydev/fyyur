@@ -11,7 +11,8 @@ def venues():
 
     data=[]
 
-    locations = db.session.query(Venue.city, Venue.state)
+    locations = db.session.query(Venue.city, Venue.state).distinct()
+  # .distinct stops venues from duplicating on page
 
     for location in locations:
         venues = db.session.query(
@@ -101,8 +102,8 @@ def show_venue(venue_id):
                 "start_time": show.start_time.strftime('%m/%d/%Y')
             })
     
-    if show.start_time < datetime.now:
-        past_shows.append({
+        if show.start_time < datetime.now:
+            past_shows.append({
             "artist_id": show.artist_id,
             "artist_name": show.artist.name,
             "artist_image_link": show.artist.image_link,

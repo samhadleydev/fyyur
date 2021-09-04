@@ -89,23 +89,22 @@ def show_artist(artist_id):
     upcoming_shows = []
 
     past_shows = []
-######################################################################################## show referenced before assignment
+
     for show in artist.shows:
         if show.start_time > datetime.now:
-            upcoming_shows.append({
+                upcoming_shows.append({
                 "venue_id": show.venue_id,
                 "venue_name": show.venue.name,
                 "venue_image_link": show.venue.image_link,
                 "start_time": show.start_time.strftime('%m/%d/%Y')
             })
-
-    if show.start_time < datetime.now:
-        past_shows.append({
-            "venue_id": show.venue_id,
-            "venue_name": show.venue.name,
-            "venue_image_link": show.venue.image_link,
-            "start_time": show.start_time.strftime('%m/%d/%Y')
-        })
+        if show.start_time < datetime.now:
+            past_shows.append({
+                "venue_id": show.venue_id,
+                "venue_name": show.venue.name,
+                "venue_image_link": show.venue.image_link,
+                "start_time": show.start_time.strftime('%m/%d/%Y')
+            })
 
     data = {
         "id": artist.id,

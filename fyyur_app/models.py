@@ -30,6 +30,14 @@ venue_genres = db.Table('venue_genre_table',
     db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True)
 )    
 
+class Show(db.Model):
+    __tablename__ = 'Show'
+
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #used .utcnow instead of .now
+    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
+
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
@@ -70,13 +78,6 @@ class Artist(db.Model):
     shows = db.relationship('Show', backref='artist', lazy=True)
 
 
-class Show(db.Model):
-    __tablename__ = 'Show'
-
-    id = db.Column(db.Integer, primary_key=True)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #used .utcnow instead of .now
-    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
 
 
     # DONE: implement any missing fields, as a database migration using Flask-Migrate

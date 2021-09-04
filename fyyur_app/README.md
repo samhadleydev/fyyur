@@ -1,5 +1,13 @@
 Fyyur
 -----
+## Pre-Introduction!
+
+I've restructured this project into a package which it so much easier for me to work on each part of the 
+app.
+
+To start the app: 
+$ cd fyyur_project
+$ python3 run.py
 
 ## Introduction
 
