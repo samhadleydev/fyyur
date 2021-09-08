@@ -86,19 +86,27 @@ def show_artist(artist_id):
     genres = [ genre.name for genre in artist.genres ]
     # single line loop to get genre data from relational table
 
+    # query the database
+    upcoming_shows_q = db.session.query(Show).join(Artist).filter(
+                        Show.artist_id==artist_id).filter(
+                        Show.start_time > datetime.utcnow()).all()
     upcoming_shows = []
 
-    past_shows = []
-
-    for show in artist.shows:
-        if show.start_time > datetime.now:
+    for show in upcoming_shows_q:
                 upcoming_shows.append({
                 "venue_id": show.venue_id,
                 "venue_name": show.venue.name,
                 "venue_image_link": show.venue.image_link,
                 "start_time": show.start_time.strftime('%m/%d/%Y')
             })
-        if show.start_time < datetime.now:
+    
+    # query the database
+    past_shows_q = db.session.query(Show).join(Artist).filter(
+                    Show.artist_id==artist_id).filter(
+                    Show.start_time < datetime.utcnow()).all()
+    past_shows = []
+
+    for show in past_shows_q:
             past_shows.append({
                 "venue_id": show.venue_id,
                 "venue_name": show.venue.name,

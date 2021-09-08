@@ -86,23 +86,36 @@ def show_venue(venue_id):
   # DONE: replace with real venue data from the venues table, using venue_id
   
     venue = Venue.query.get(venue_id)
+    
+
     # single line loop to get genre data from relational table
     genres = [ genre.name for genre in venue.genres ]
 
+    # query the database
+    upcoming_shows_q = db.session.query(Show).join(Venue).filter(
+                        Show.venue_id==venue_id).filter(
+                        Show.start_time > datetime.utcnow()).all()
+
+    # list to be appended witn results from for loop
     upcoming_shows = []
 
+    for show in upcoming_shows_q:
+        upcoming_shows.append({
+            "artist_id": show.artist_id,
+            "artist_name": show.artist.name,
+            "artist_image_link": show.artist.image_link,
+            "start_time": show.start_time.strftime('%m/%d/%Y')
+        })
+    
+    # query the database
+    past_shows_q = db.session.query(Show).join(Venue).filter(
+                    Show.venue_id==venue_id).filter(
+                    Show.start_time < datetime.utcnow()).all()
+
+    # list to be appended witn results from for loop
     past_shows = []
 
-    for show in venue.shows:
-        if show.start_time > datetime.now:
-            upcoming_shows.append({
-                "artist_id": show.artist_id,
-                "artist_name": show.artist.name,
-                "artist_image_link": show.artist.image_link,
-                "start_time": show.start_time.strftime('%m/%d/%Y')
-            })
-    
-        if show.start_time < datetime.now:
+    for show in past_shows_q:
             past_shows.append({
             "artist_id": show.artist_id,
             "artist_name": show.artist.name,

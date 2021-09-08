@@ -9,6 +9,8 @@ import babel
 import logging
 import os
 from logging import Formatter, FileHandler
+from flask_migrate import Migrate
+
 #____________________________________________________________________________________
 #                                                                              CONFIG
 app = Flask(__name__)
@@ -26,6 +28,8 @@ DEBUG = True
 
 # DONE: IMPLEMENT DATABASE URL
 SQLALCHEMY_DATABASE_URI = 'postgresql://samhadleydev:1234@localhost:5432/fyyur_app'
+
+migrate = Migrate(app, db)
 #____________________________________________________________________________________
 #                                                                             FILTERS
 def format_datetime(value, format='medium'):
